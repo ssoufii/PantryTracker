@@ -1,5 +1,7 @@
 import {Box,Stack, Typography} from '@mui/material' //importing a box from material UI website
-
+import { firestore } from '@/firestore';
+import { collection } from 'firebase/firestore';
+import { useEffect } from 'react';
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application 
 //npm run dev allows you to view this page.js on localhost3000
 
@@ -7,6 +9,9 @@ const item = ['tomato', 'potato', 'mustard', 'ketchup', 'juice', 'watermelon', '
 
 
 export default function Home() {
+  useEffect(() => {
+    const items = collection(firestore, 'items')
+  }, [])
   return (
     <Box //this is how we create a flex box
       width = '100vw' //sets the width and height to fill entire screen
