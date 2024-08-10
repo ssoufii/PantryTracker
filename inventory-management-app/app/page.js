@@ -1,16 +1,42 @@
+"use client" // explicitly tells next.js that we are using client side rendering and not server side
+
+import { initializeApp } from "firebase/app";
 import {Box,Stack, Typography} from '@mui/material' //importing a box from material UI website
-import { firestore } from '@/firestore';
-import { collection } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
+
+import {useEffect, useState} from 'react';
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application 
 //npm run dev allows you to view this page.js on localhost3000
 
-const item = ['tomato', 'potato', 'mustard', 'ketchup', 'juice', 'watermelon', 'cucumbers', 'kale', 'hummus']
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADsARlt-jailCu6NtOLiRtrZdHO9b9EF8",
+  authDomain: "pantry-tracker-1cd3a.firebaseapp.com",
+  projectId: "pantry-tracker-1cd3a",
+  storageBucket: "pantry-tracker-1cd3a.appspot.com",
+  messagingSenderId: "752199321246",
+  appId: "1:752199321246:web:c42f3a7c2db7fa29f75d8f",
+  measurementId: "G-Z4SF4ZVYG7"
+};
+initializeApp(firebaseConfig);
 
 
 export default function Home() {
+  const [pantry, setPantry] = useState([])
   useEffect(() => {
-    const items = collection(firestore, 'items')
+    const updatePantry = async () => {
+      const firestore = getFirestore()
+      const snapshot = query(collection(firestore, 'pantry'))
+      const docs = await getDocs(snapshot)
+      const pantryList = []
+      docs.forEach((doc) => {
+ 
+        pantryList.push(doc.id)
+      })
+      console.log(pantryList)
+      setPantry(pantryList)
+    }
+    updatePantry()
   }, [])
   return (
     <Box //this is how we create a flex box
@@ -39,11 +65,11 @@ export default function Home() {
 
     </Box>
     <Stack width = '800px' height = '300px' spacing = {2} overflow = {'auto'} >
-      {item.map((i) => (
+      {pantry.map((i) => (
             <Box //this is how we create a flex box here
             key = {i} //for each i in ..
             width = '100%' //sets the width and height to fill entire screen
-            height = '300px'
+            minHeight = '200px'
             display = {'flex'}
             justifyContent = {'center'} //sets word to middle
             bgcolor = {"#f0f0f0"}
