@@ -1,7 +1,7 @@
 "use client" // explicitly tells next.js that we are using client side rendering and not server side
 
 import { initializeApp } from "firebase/app";
-import {Box,Stack, Typography, Button} from '@mui/material' //importing a box from material UI website
+import {Box,Stack, Typography, Button, Modal} from '@mui/material' //importing a box from material UI website
 import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
 
 import {useEffect, useState} from 'react';
@@ -23,6 +23,11 @@ initializeApp(firebaseConfig);
 
 export default function Home() {
   const [pantry, setPantry] = useState([])
+
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
   useEffect(() => {
     const updatePantry = async () => {
       const firestore = getFirestore()
@@ -49,9 +54,26 @@ export default function Home() {
       border={'1px solid #333'}
       gap = {2}//putting a gap inbetween the pantry items header and the bottom
     >
+    <Modal // A modal is like a popup display, this is the popup in which we'll add new items to the pantry
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Text in a modal
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+        </Box>
+      </Modal>
 
 
-    <Button variant="contained">ADD</Button>
+    <Button variant="contained" onClick = {handleOpen}
+    
+    >ADD</Button>
 
     <Box border={'1px solid #333'}>
     <Box width = "800px" height = '100px' bgcolor = {'#ADD8E6'} display = {'flex'} alignItems = {'center'} justifyContent = {'center'} border={'1px solid #333'}
