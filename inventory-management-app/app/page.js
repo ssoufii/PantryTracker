@@ -1,7 +1,7 @@
 "use client" // explicitly tells next.js that we are using client side rendering and not server side
 
 import { initializeApp } from "firebase/app";
-import {Box,Stack, Typography} from '@mui/material' //importing a box from material UI website
+import {Box,Stack, Typography, Button} from '@mui/material' //importing a box from material UI website
 import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
 
 import {useEffect, useState} from 'react';
@@ -47,8 +47,12 @@ export default function Home() {
       flexDirection = {'column'}
       alignItems = {'center'}
       border={'1px solid #333'}
-
+      gap = {2}//putting a gap inbetween the pantry items header and the bottom
     >
+
+
+    <Button variant="contained">ADD</Button>
+
     <Box border={'1px solid #333'}>
     <Box width = "800px" height = '100px' bgcolor = {'#ADD8E6'} display = {'flex'} alignItems = {'center'} justifyContent = {'center'} border={'1px solid #333'}
     //CREATING A HEADER/
@@ -112,3 +116,4 @@ export default function Home() {
 
   );
 }
+
