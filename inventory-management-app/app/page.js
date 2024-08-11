@@ -1,12 +1,27 @@
 "use client" // explicitly tells next.js that we are using client side rendering and not server side
 
 import { initializeApp } from "firebase/app";
-import {Box,Stack, Typography, Button, Modal} from '@mui/material' //importing a box from material UI website
+import {Box,Stack, Typography, Button, Modal, TextField} from '@mui/material' //importing a box from material UI website
 import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
 
 import {useEffect, useState} from 'react';
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application 
 //npm run dev allows you to view this page.js on localhost3000
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'white',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 3,
+};
 
 
 const firebaseConfig = {
@@ -27,6 +42,7 @@ export default function Home() {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const [itemName, setItemName] = useState('')
 
   useEffect(() => {
     const updatePantry = async () => {
@@ -55,18 +71,21 @@ export default function Home() {
       gap = {2}//putting a gap inbetween the pantry items header and the bottom
     >
     <Modal // A modal is like a popup display, this is the popup in which we'll add new items to the pantry
+    //the modal dissapears once you touch outside of the box
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box>
+        <Box sx = {style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+            ADD ITEM
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <Stack width = '100%' direction = {'row'} spacing = {4} fullWidth >
+            <TextField id="outlined-basic" label="Item" variant="outlined" />
+            <Button variant="Outlined"> ADD</Button>
+          </Stack>
+          
         </Box>
       </Modal>
 
@@ -87,10 +106,9 @@ export default function Home() {
       Pantry Items
       </Typography>
 
-
-
+      
     </Box>
-    <Stack width = '800px' height = '300px' spacing = {2} overflow = {'auto'} >
+    <Stack width = '800px' spacing = {2} overflow = {'auto'} >
       {pantry.map((i) => (
             <Box //this is how we create a flex box here
             key = {i} //for each i in ..
