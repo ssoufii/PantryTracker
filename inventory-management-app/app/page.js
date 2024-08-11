@@ -2,7 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import {Box,Stack, Typography, Button, Modal, TextField} from '@mui/material' //importing a box from material UI website
-import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, doc, getDocs, setDoc } from 'firebase/firestore';
 
 import {useEffect, useState} from 'react';
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application 
@@ -44,21 +44,33 @@ export default function Home() {
   const handleClose = () => setOpen(false)
   const [itemName, setItemName] = useState('')
 
+
+
+  const updatePantry = async () => {
+    const firestore = getFirestore()
+    const snapshot = query(collection(firestore, 'pantry'))
+    const docs = await getDocs(snapshot)
+    const pantryList = []
+    docs.forEach((doc) => {
+
+      pantryList.push(doc.id)
+    })
+    console.log(pantryList)
+    setPantry(pantryList)
+
+  }
   useEffect(() => {
-    const updatePantry = async () => {
-      const firestore = getFirestore()
-      const snapshot = query(collection(firestore, 'pantry'))
-      const docs = await getDocs(snapshot)
-      const pantryList = []
-      docs.forEach((doc) => {
- 
-        pantryList.push(doc.id)
-      })
-      console.log(pantryList)
-      setPantry(pantryList)
-    }
     updatePantry()
   }, [])
+
+  const addItem = async (item) => {
+      const firestore = getFirestore();
+
+      const docRef = doc(collection(firestore, 'pantry'), item)
+      await setDoc(docRef, {})
+      updatePantry()
+  }
+
   return (
     <Box //this is how we create a flex box
       width = '100vw' //sets the width and height to fill entire screen
@@ -81,9 +93,16 @@ export default function Home() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             ADD ITEM
           </Typography>
-          <Stack width = '100%' direction = {'row'} spacing = {4} fullWidth >
+          <Stack width = '100%' direction = {'row'} spacing = {4} fullWidth value = {itemName} onChange = {(e) => setItemName(e.target.value)}>
+
             <TextField id="outlined-basic" label="Item" variant="outlined" />
-            <Button variant="Outlined"> ADD</Button>
+            <Button variant="Outlined"  onClick = {() => {
+                addItem(itemName)
+                setItemName('')
+                handleClose()
+
+            }} 
+            > ADD</Button>
           </Stack>
           
         </Box>
@@ -108,7 +127,7 @@ export default function Home() {
 
       
     </Box>
-    <Stack width = '800px' spacing = {2} overflow = {'auto'} >
+    <Stack width = '800px' height = '300px' spacing = {2} overflow = {'scroll'} >
       {pantry.map((i) => (
             <Box //this is how we create a flex box here
             key = {i} //for each i in ..
