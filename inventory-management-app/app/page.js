@@ -16,6 +16,7 @@ import {
   doc,
   getDocs,
   setDoc,
+  deleteDoc
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application
@@ -77,6 +78,17 @@ export default function Home() {
     await setDoc(docRef, {});
     updatePantry();
   };
+
+  const removeItem = async (item) => {
+    const firestore = getFirestore();
+
+    const docRef = doc(collection(firestore, "pantry"), item);
+    await deleteDoc(docRef).then(() => {
+      updatePantry();
+    })
+    
+  };
+
 
   return (
     <Box //this is how we create a flex box
@@ -155,9 +167,10 @@ export default function Home() {
               width="100%" //sets the width and height to fill entire screen
               minHeight="200px"
               display={"flex"}
-              justifyContent={"center"} //sets word to middle
+              justifyContent={"space-between"} //sets word to middle
               bgcolor={"#f0f0f0"}
               alignItems={"center"}
+              paddingX={5}
             >
               <Typography //editing the styling of the listed words
                 variant={"h3"}
@@ -169,6 +182,13 @@ export default function Home() {
                   i.charAt(0).toUpperCase() + i.slice(1) //slice the first letter of each word and capitalize it
                 }
               </Typography>
+              
+            <Button
+              variant="Contained"
+              onClick={() => {
+                removeItem(i)}}>
+
+                REMOVE</Button>
             </Box>
           ))}
         </Stack>
