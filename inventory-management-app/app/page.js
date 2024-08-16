@@ -108,6 +108,8 @@ export default function Home() {
     
   }
   await updatePantry();
+
+  
   };
 
 
