@@ -22,7 +22,9 @@ import {
 import { useEffect, useState } from "react";
 //page.js is similiar to app.js or index.html, this holds the main screen on the web application
 //npm run dev allows you to view this page.js on localhost3000
-
+import { auth } from './firebase'; // Ensure correct import of auth
+import { signOut, useSession } from "firebase/auth"; //idk if i should use this or "next-auth/react"
+//const ite
 const style = {
   position: "absolute",
   top: "50%",
